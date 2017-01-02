@@ -1,0 +1,9 @@
+language: go
+go:
+  - 1.7.4
+
+install:
+  - go get gopkg.in/olivere/elastic.v5
+
+script:
+  - go test -v ./...
