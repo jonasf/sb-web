@@ -20,7 +20,7 @@ type SearchResult struct {
 }
 
 type Aggregation struct {
-	key string
+	key   string
 	count int64
 }
 
@@ -110,7 +110,7 @@ func parseAggregations(items []*elastic.AggregationBucketHistogramItem) []Aggreg
 	aggregations := make([]Aggregation, len(items))
 
 	for i, dateBucket := range items {
-		aggregations[i] = Aggregation{ key: *dateBucket.KeyAsString, count: dateBucket.DocCount }
+		aggregations[i] = Aggregation{key: *dateBucket.KeyAsString, count: dateBucket.DocCount}
 	}
 
 	return aggregations
