@@ -14,14 +14,14 @@ type Searcher struct {
 }
 
 type SearchResult struct {
-	numberOfHits int64
-	articles     []Article
-	aggregations []Aggregation
+	NumberOfHits int64         `json:"hits"`
+	Articles     []Article     `json:"articles"`
+	Aggregations []Aggregation `json:"aggregations"`
 }
 
 type Aggregation struct {
-	key   string
-	count int64
+	Key   string `json:"key"`
+	Count int64  `json:"count"`
 }
 
 func (s *Searcher) SearchArticleGroup(articleGroup string, from int, size int) (*SearchResult, error) {
@@ -33,8 +33,8 @@ func (s *Searcher) SearchArticleGroup(articleGroup string, from int, size int) (
 	}
 
 	return &SearchResult{
-		numberOfHits: searchResult.TotalHits(),
-		articles:     parseArticles(searchResult.Hits.Hits),
+		NumberOfHits: searchResult.TotalHits(),
+		Articles:     parseArticles(searchResult.Hits.Hits),
 	}, nil
 }
 
@@ -59,7 +59,6 @@ func (s *Searcher) ArticleGroupSalesStartHistogram(articleGroup string, startDat
 	}
 
 	agg, found := searchResult.Aggregations.DateHistogram("aggs")
-	parseAggregations(agg.Buckets)
 
 	var aggregations []Aggregation
 	if found {
@@ -67,7 +66,7 @@ func (s *Searcher) ArticleGroupSalesStartHistogram(articleGroup string, startDat
 	}
 
 	return &SearchResult{
-		aggregations: aggregations,
+		Aggregations: aggregations,
 	}, nil
 }
 
@@ -110,7 +109,7 @@ func parseAggregations(items []*elastic.AggregationBucketHistogramItem) []Aggreg
 	aggregations := make([]Aggregation, len(items))
 
 	for i, dateBucket := range items {
-		aggregations[i] = Aggregation{key: *dateBucket.KeyAsString, count: dateBucket.DocCount}
+		aggregations[i] = Aggregation{Key: *dateBucket.KeyAsString, Count: dateBucket.DocCount}
 	}
 
 	return aggregations

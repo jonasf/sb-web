@@ -1,16 +1,19 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
 	"time"
 )
 
-//import "fmt"
+const port string = ":8080"
 
 func main() {
 	searcher := NewSearcher()
 
-	result, err := searcher.SearchArticleGroup("Öl", 0, 10)
+	/*result, err := searcher.SearchArticleGroup("Öl", 0, 10)
 
 	if err != nil {
 		panic(err)
@@ -21,14 +24,24 @@ func main() {
 	for _, article := range result.articles {
 		fmt.Printf("Article %s: %s\n", article.Name, article.SecondaryName)
 	}
+	*/
 
-	aggResult, err := searcher.ArticleGroupSalesStartHistogram("Öl", time.Date(2017, 1, 1, 12, 0, 0, 0, time.UTC))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "Under contruction")
+	})
 
-	if err != nil {
-		panic(err)
-	}
+	http.HandleFunc("/salesstarts", func(w http.ResponseWriter, r *http.Request) {
+		fromDate := time.Now().AddDate(0, 0, -2)
+		aggResult, err := searcher.ArticleGroupSalesStartHistogram("Öl", time.Date(fromDate.Year(), fromDate.Month(), fromDate.Day(), 0, 0, 0, 0, time.UTC))
 
-	for _, agg := range aggResult.aggregations {
-		fmt.Printf("Aggregation %s: %d\n", agg.key, agg.count)
-	}
+		if err != nil {
+			log.Println(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(aggResult.Aggregations)
+	})
+
+	log.Println("Starting server on port: ", port)
+	log.Println(http.ListenAndServe(port, nil))
 }
