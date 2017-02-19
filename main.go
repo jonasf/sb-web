@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,7 +12,11 @@ import (
 const port string = ":8080"
 
 func main() {
-	searcher := NewSearcher()
+
+	esURLPtr := flag.String("es-url", "elasticsearch:9200", "ElasticSearch URL")
+	flag.Parse()
+
+	searcher := NewSearcher(*esURLPtr)
 
 	/*result, err := searcher.SearchArticleGroup("Öl", 0, 10)
 
