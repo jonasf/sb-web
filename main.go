@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -13,10 +14,24 @@ const port string = ":8080"
 
 func main() {
 
-	esURLPtr := flag.String("es-url", "elasticsearch:9200", "ElasticSearch URL")
-	flag.Parse()
+	//Delayed start to wait for dependencies to start
+	delayedStartDuration := os.Getenv("DELAYED-START")
+	if delayedStartDuration != "" {
+		duration, _ := time.ParseDuration(delayedStartDuration)
+		log.Println("Delaying start for ", duration)
+		time.Sleep(duration)
+	}
 
-	searcher := NewSearcher(*esURLPtr)
+	esURL := os.Getenv("ES-URL")
+
+	if esURL == "" {
+		esURLPtr := flag.String("es-url", "http://localhost:9200", "ElasticSearch URL")
+		flag.Parse()
+		esURL = *esURLPtr
+	}
+	log.Println("Elasticsearch server address: ", esURL)
+
+	searcher := NewSearcher(esURL)
 
 	/*result, err := searcher.SearchArticleGroup("Öl", 0, 10)
 
