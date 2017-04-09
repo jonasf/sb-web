@@ -38,13 +38,31 @@ func (s *Searcher) SearchArticleGroup(articleGroup string, from int, size int) (
 	}, nil
 }
 
+func (s *Searcher) SearchArticleGroupSalesStart(articleGroup string, startDate time.Time, from int, size int) (*SearchResult, error) {
+	query := elastic.NewBoolQuery().
+		Must(elastic.NewMatchQuery("ArticleGroup", articleGroup)).
+		Filter(elastic.NewRangeQuery("SalesStart").
+			Gte(time.Date(startDate.Year(), startDate.Month(), startDate.Day(), 0, 0, 0, 0, time.UTC)).
+			Lte(time.Date(startDate.Year(), startDate.Month(), startDate.Day(), 23, 59, 59, 0, time.UTC)))
+	searchResult, err := s.search(query, from, size)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &SearchResult{
+		NumberOfHits: searchResult.TotalHits(),
+		Articles:     parseArticles(searchResult.Hits.Hits),
+	}, nil
+}
+
 func (s *Searcher) ArticleGroupSalesStartHistogram(articleGroup string, startDate time.Time) (*SearchResult, error) {
 
 	query := elastic.NewBoolQuery().
 		Must(elastic.NewMatchQuery("ArticleGroup", articleGroup)).
 		Filter(elastic.NewRangeQuery("SalesStart").Gte(startDate.Format("2006-01-02")))
 
-	aggregation := elastic.NewDateHistogramAggregation().Field("SalesStart").Interval("day").MinDocCount(1)
+	aggregation := elastic.NewDateHistogramAggregation().Field("SalesStart").Interval("day").MinDocCount(1).Format("yyyy-MM-dd")
 
 	searchResult, err := s.elasticsearchClient.Search().
 		Index("articles").
