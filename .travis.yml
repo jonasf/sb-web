@@ -4,6 +4,7 @@ go:
 
 install:
   - go get gopkg.in/olivere/elastic.v5
+  - go get github.com/gorilla/mux
 
 script:
   - go test -v ./...
