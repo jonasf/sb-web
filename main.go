@@ -32,6 +32,7 @@ func main() {
 	requestHandler := NewRequestHandler(esURL)
 
 	r := mux.NewRouter()
+	r.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("public/"))))
 	r.HandleFunc("/", requestHandler.HomeHandler)
 	r.HandleFunc("/salesstart/{date}", requestHandler.SalesStartDateHandler)
 

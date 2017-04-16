@@ -1,9 +1,10 @@
-{{ define "title" }}Home{{ end }}
+{{ define "title" }}Start{{ end }}
 
 {{ define "content" }}
+<h1>Lanseringar</h1>
 <ul>
-	{{range .Aggregations}}
+    {{range .Aggregations}}
         <li><a href="/salesstart/{{.Key}}">{{.Key}} ({{.Count}})</a></li>
-	{{end}}
+    {{end}}
 </ul>
 {{ end }}
