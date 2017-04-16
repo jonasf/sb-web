@@ -1,0 +1,9 @@
+{{ define "title" }}Home{{ end }}
+
+{{ define "content" }}
+<ul>
+	{{range .Aggregations}}
+        <li><a href="/salesstart/{{.Key}}">{{.Key}} ({{.Count}})</a></li>
+	{{end}}
+</ul>
+{{ end }}

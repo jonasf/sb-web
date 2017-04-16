@@ -1,0 +1,9 @@
+{{ define "title" }}Säljstart{{ end }}
+
+{{ define "content" }}
+<ul>
+	{{range .Articles}}
+        <li>{{.Name}} {{.SecondaryName}}, {{.OriginCountry}}</a></li>
+	{{end}}
+</ul>
+{{ end }}
