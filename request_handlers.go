@@ -9,8 +9,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
+type Search interface {
+	SearchArticleGroup(articleGroup string, from int, size int) (*SearchResult, error)
+	SearchArticleGroupSalesStart(articleGroup string, startDate time.Time, from int, size int) (*SearchResult, error)
+	ArticleGroupSalesStartHistogram(articleGroup string, startDate time.Time) (*SearchResult, error)
+}
+
 type RequestHandler struct {
-	searcher  Searcher
+	searcher  Search
 	templates map[string]*template.Template
 }
 
@@ -21,9 +27,8 @@ func (s *RequestHandler) HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Println(err)
-	}
-
-	if err := s.templates["index"].Execute(w, struct{ Aggregations []Aggregation }{aggResult.Aggregations}); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	} else if err := s.templates["index"].Execute(w, struct{ Aggregations []Aggregation }{aggResult.Aggregations}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -38,9 +43,8 @@ func (s *RequestHandler) SalesStartDateHandler(w http.ResponseWriter, r *http.Re
 	result, err := s.searcher.SearchArticleGroupSalesStart("Öl", time.Date(releaseDate.Year(), releaseDate.Month(), releaseDate.Day(), 0, 0, 0, 0, time.UTC), 0, 50)
 	if err != nil {
 		log.Println(err)
-	}
-
-	if err := s.templates["salesstartdate"].Execute(w, struct{ Articles []Article }{result.Articles}); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	} else if err := s.templates["salesstartdate"].Execute(w, struct{ Articles []Article }{result.Articles}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

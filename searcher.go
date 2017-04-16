@@ -133,14 +133,14 @@ func parseAggregations(items []*elastic.AggregationBucketHistogramItem) []Aggreg
 	return aggregations
 }
 
-func NewSearcher(serverURL string) Searcher {
+func NewSearcher(serverURL string) *Searcher {
 
 	client, err := elastic.NewClient(elastic.SetURL(serverURL))
 	if err != nil {
 		panic(err)
 	}
 
-	return Searcher{
+	return &Searcher{
 		elasticsearchClient: client,
 	}
 }
