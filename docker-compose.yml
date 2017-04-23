@@ -12,6 +12,8 @@ services:
         environment:
             - ES-URL=http://elasticsearch:9200
             - DELAYED-START=30s
+        networks:
+            - beer_releases
 
     indexer:
         image: jonasfred/sb-indexer
@@ -21,7 +23,9 @@ services:
             - elasticsearch
         environment:
             - ES-URL=http://elasticsearch:9200
-            - DELAYED-START=30s    
+            - DELAYED-START=30s
+        networks:
+            - beer_releases
 
     elasticsearch:
         image: docker.elastic.co/elasticsearch/elasticsearch:5.3.1
@@ -31,3 +35,14 @@ services:
             - transport.host=127.0.0.1
         expose:
             - 9200
+        volumes: 
+            - search_index:/usr/share/elasticsearch/data
+        networks:
+            - beer_releases
+
+networks:
+    beer_releases:
+        driver: bridge
+
+volumes: 
+    search_index:
