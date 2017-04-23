@@ -3,8 +3,6 @@ version: '3.0'
 services: 
     web:
         image: jonasfred/sb-web
-        expose:
-            - 8080
         ports:
             - 8080:8080
         links: 
@@ -26,8 +24,22 @@ services:
             - DELAYED-START=30s    
 
     elasticsearch:
-        image: elasticsearch:5.2.1
+        image: docker.elastic.co/elasticsearch/elasticsearch:5.3.1
+        environment:
+            - xpack.security.enabled=false
+            - xpack.monitoring.enabled=false
+            - transport.host=127.0.0.1
         expose:
             - 9200
+
+    kibana:
+        image: docker.elastic.co/kibana/kibana:5.3.1
+        environment:
+            - xpack.security.enabled=false
+            - xpack.monitoring.enabled=false
+        links: 
+            - elasticsearch
+        depends_on: 
+            - elasticsearch
         ports:
-            - 9200:9200
+            - 5601:5601
