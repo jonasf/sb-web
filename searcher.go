@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 
 	"golang.org/x/net/context"
@@ -135,7 +136,9 @@ func parseAggregations(items []*elastic.AggregationBucketHistogramItem) []Aggreg
 
 func NewSearcher(serverURL string) *Searcher {
 
-	client, err := elastic.NewClient(elastic.SetURL(serverURL))
+	client, err := retryConnect(15, 5*time.Second, func() (*elastic.Client, error) {
+		return elastic.NewClient(elastic.SetURL(serverURL))
+	})
 	if err != nil {
 		panic(err)
 	}
@@ -143,4 +146,22 @@ func NewSearcher(serverURL string) *Searcher {
 	return &Searcher{
 		elasticsearchClient: client,
 	}
+}
+
+func retryConnect(attempts int, sleep time.Duration, callback func() (*elastic.Client, error)) (client *elastic.Client, err error) {
+	for i := 0; ; i++ {
+		client, err := callback()
+		if err == nil {
+			return client, nil
+		}
+
+		if i >= (attempts - 1) {
+			break
+		}
+
+		time.Sleep(sleep)
+
+		log.Println("Retry connecting to datastore after error:", err)
+	}
+	return nil, fmt.Errorf("after %d attempts, last error: %s", attempts, err)
 }

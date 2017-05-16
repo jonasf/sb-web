@@ -12,14 +12,6 @@ import (
 
 func main() {
 
-	//Delayed start to wait for dependencies to start
-	delayedStartDuration := os.Getenv("DELAYED-START")
-	if delayedStartDuration != "" {
-		duration, _ := time.ParseDuration(delayedStartDuration)
-		log.Println("Delaying start for ", duration)
-		time.Sleep(duration)
-	}
-
 	esURL := os.Getenv("ES-URL")
 
 	if esURL == "" {
