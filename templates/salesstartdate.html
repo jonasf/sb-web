@@ -3,7 +3,7 @@
 {{ define "content" }}
 <ul>
     {{range .Articles}}
-        <li>{{.Name}} {{.SecondaryName}}, {{.OriginCountry}}</a></li>
+        <li>{{.Name}} {{.SecondaryName}}, {{.AlcoholPercentage}}%, {{.Producer}}, {{.OriginCountry}}</a></li>
     {{end}}
 </ul>
 {{ end }}
