@@ -1,9 +1,19 @@
 {{ define "title" }}Säljstart{{ end }}
 
 {{ define "content" }}
-<ul>
     {{range .Articles}}
-        <li>{{.Name}} {{.SecondaryName}}, {{.AlcoholPercentage}}%, {{.Producer}}, {{.OriginCountry}}</a></li>
+        <div class="row">
+            <div class="card large">
+                <div class="section">
+                <h3>{{.Name}} {{.SecondaryName}}</h3>
+                <p class="section">{{.Producer}}</p>
+                <p class="section">{{.PriceIncludingVAT}} kr | {{.Packaging}} {{.VolumeInMl}} ml</p>
+                <p class="section">{{.AlcoholPercentage}}% | {{.ArticleType}} {{.ArticleStyle}}</p>
+                <p class="section">{{.OriginCountry}}</p>
+                <p class="section">{{.SelectionText}} ({{.Selection}})</p>
+                </div>
+            </div>
+        </div>
     {{end}}
-</ul>
+
 {{ end }}
