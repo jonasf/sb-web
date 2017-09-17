@@ -1,5 +1,5 @@
 # Build stage
-FROM golang:1.8.1 AS build-env
+FROM golang:1.9 AS build-env
 ADD . /src
 
 # TODO: Replace with depencdency manager
