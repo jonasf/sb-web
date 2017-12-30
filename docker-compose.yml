@@ -31,6 +31,7 @@ services:
             - xpack.security.enabled=false
             - xpack.monitoring.enabled=false
             - transport.host=127.0.0.1
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
         expose:
             - 9200
         volumes:
