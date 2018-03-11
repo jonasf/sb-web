@@ -13,7 +13,7 @@ services:
             - ES-URL=http://elasticsearch:9200
 
     indexer:
-        image: jonasfred/sb-indexer
+        image: jonasfred/systembolaget-article-indexer:latest
         links:
             - elasticsearch
         depends_on:

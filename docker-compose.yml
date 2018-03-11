@@ -15,7 +15,7 @@ services:
             - beer_releases
 
     indexer:
-        image: jonasfred/sb-indexer
+        image: jonasfred/systembolaget-article-indexer:latest
         links:
             - elasticsearch
         depends_on:
