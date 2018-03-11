@@ -2,10 +2,12 @@ language: go
 go:
 - "1.10"
 
+before_install:
+- go get -u github.com/golang/dep/cmd/dep
+- chmod +x $GOPATH/bin/dep
+
 install:
-- go get golang.org/x/net/context
-- go get gopkg.in/olivere/elastic.v5
-- go get github.com/gorilla/mux
+- dep ensure
 - go get golang.org/x/tools/cmd/cover
 - go get github.com/mattn/goveralls
 
