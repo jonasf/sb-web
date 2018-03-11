@@ -6,7 +6,6 @@
 # Folders
 _obj
 _test
-.idea
 
 # Architecture specific extensions/prefixes
 *.[568vq]
@@ -23,5 +22,11 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# external packages folder
+vendor/
 
 sb-web
