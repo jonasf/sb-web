@@ -1,21 +1,22 @@
 # Build stage
 FROM golang:1.10 AS build-env
-ADD . /src
+ADD . $GOPATH/src/build
+WORKDIR $GOPATH/src/build
 
-# TODO: Replace with depencdency manager
-RUN go get golang.org/x/net/context
-RUN go get gopkg.in/olivere/elastic.v5
-RUN go get github.com/gorilla/mux
+## Install dependencies
+RUN go get -u github.com/golang/dep/cmd/dep
+RUN dep ensure -vendor-only
 
-RUN cd /src && CGO_ENABLED=0 go build -a --installsuffix cgo --ldflags="-s" -o sb-web
+RUN CGO_ENABLED=0 go build -a --installsuffix cgo --ldflags="-s" -o sb-web
 
 # Package stage
 FROM scratch
 
 WORKDIR /app
-COPY --from=build-env src/templates /app/templates
-COPY --from=build-env src/public /app/public
-COPY --from=build-env /src/sb-web /app/
+# NOTE: hard coded $GOPATH
+COPY --from=build-env /go/src/build/templates /app/templates
+COPY --from=build-env /go/src/build/public /app/public
+COPY --from=build-env /go/src/build/sb-web /app/
 
 EXPOSE 8080
 
