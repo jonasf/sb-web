@@ -1,18 +1,18 @@
 package main
 
 import (
+	"github.com/gorilla/mux"
+	search "github.com/jonasf/sb-web/internal/systembolaget-beer-releases"
 	"html/template"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/gorilla/mux"
 )
 
 type Search interface {
-	SearchArticleGroup(articleGroup string, from int, size int) (*SearchResult, error)
-	SearchArticleGroupSalesStart(articleGroup string, startDate time.Time, from int, size int) (*SearchResult, error)
-	ArticleGroupSalesStartHistogram(articleGroup string, startDate time.Time) (*SearchResult, error)
+	SearchArticleGroup(articleGroup string, from int, size int) (*search.SearchResult, error)
+	SearchArticleGroupSalesStart(articleGroup string, startDate time.Time, from int, size int) (*search.SearchResult, error)
+	ArticleGroupSalesStartHistogram(articleGroup string, startDate time.Time) (*search.SearchResult, error)
 }
 
 type RequestHandler struct {
@@ -28,7 +28,7 @@ func (s *RequestHandler) HomeHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else if err := s.templates["index"].Execute(w, struct{ Aggregations []Aggregation }{aggResult.Aggregations}); err != nil {
+	} else if err := s.templates["index"].Execute(w, struct{ Aggregations []search.Aggregation }{aggResult.Aggregations}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -44,7 +44,7 @@ func (s *RequestHandler) SalesStartDateHandler(w http.ResponseWriter, r *http.Re
 	if err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else if err := s.templates["salesstartdate"].Execute(w, struct{ Articles []Article }{result.Articles}); err != nil {
+	} else if err := s.templates["salesstartdate"].Execute(w, struct{ Articles []search.Article }{result.Articles}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -61,7 +61,7 @@ func setupTemplates() map[string]*template.Template {
 
 func NewRequestHandler(serverURL string) RequestHandler {
 	return RequestHandler{
-		searcher:  NewSearcher(serverURL),
+		searcher:  search.NewSearcher(serverURL),
 		templates: setupTemplates(),
 	}
 }

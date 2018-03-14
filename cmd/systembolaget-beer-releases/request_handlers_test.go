@@ -2,34 +2,34 @@ package main
 
 import (
 	"errors"
+	"github.com/gorilla/mux"
+	search "github.com/jonasf/sb-web/internal/systembolaget-beer-releases"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
-
-	"github.com/gorilla/mux"
 )
 
 type SearchStub struct{}
 
-func (histogramStub *SearchStub) ArticleGroupSalesStartHistogram(articleGroup string, startDate time.Time) (*SearchResult, error) {
+func (histogramStub *SearchStub) ArticleGroupSalesStartHistogram(articleGroup string, startDate time.Time) (*search.SearchResult, error) {
 
-	agg := make([]Aggregation, 1)
-	agg[0] = Aggregation{Key: "2017-05-05", Count: 2}
-	return &SearchResult{
+	agg := make([]search.Aggregation, 1)
+	agg[0] = search.Aggregation{Key: "2017-05-05", Count: 2}
+	return &search.SearchResult{
 		Aggregations: agg,
 	}, nil
 }
 
-func (histogramStub *SearchStub) SearchArticleGroup(articleGroup string, from int, size int) (*SearchResult, error) {
+func (histogramStub *SearchStub) SearchArticleGroup(articleGroup string, from int, size int) (*search.SearchResult, error) {
 	return nil, nil
 }
 
-func (histogramStub *SearchStub) SearchArticleGroupSalesStart(articleGroup string, startDate time.Time, from int, size int) (*SearchResult, error) {
-	articles := make([]Article, 1)
-	articles[0] = Article{Name: "Chimay"}
+func (histogramStub *SearchStub) SearchArticleGroupSalesStart(articleGroup string, startDate time.Time, from int, size int) (*search.SearchResult, error) {
+	articles := make([]search.Article, 1)
+	articles[0] = search.Article{Name: "Chimay"}
 
-	return &SearchResult{
+	return &search.SearchResult{
 		NumberOfHits: 1,
 		Articles:     articles,
 	}, nil
@@ -77,15 +77,15 @@ func TestSalesStartDateHandlerReturnData(t *testing.T) {
 
 type SearchFailStub struct{}
 
-func (histogramStub *SearchFailStub) ArticleGroupSalesStartHistogram(articleGroup string, startDate time.Time) (*SearchResult, error) {
+func (histogramStub *SearchFailStub) ArticleGroupSalesStartHistogram(articleGroup string, startDate time.Time) (*search.SearchResult, error) {
 	return nil, errors.New("Stuff went terribly wrong")
 }
 
-func (histogramStub *SearchFailStub) SearchArticleGroup(articleGroup string, from int, size int) (*SearchResult, error) {
+func (histogramStub *SearchFailStub) SearchArticleGroup(articleGroup string, from int, size int) (*search.SearchResult, error) {
 	return nil, nil
 }
 
-func (histogramStub *SearchFailStub) SearchArticleGroupSalesStart(articleGroup string, startDate time.Time, from int, size int) (*SearchResult, error) {
+func (histogramStub *SearchFailStub) SearchArticleGroupSalesStart(articleGroup string, startDate time.Time, from int, size int) (*search.SearchResult, error) {
 	return nil, errors.New("Stuff went terribly wrong")
 }
 
