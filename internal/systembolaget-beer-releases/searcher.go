@@ -12,6 +12,7 @@ import (
 
 type Searcher struct {
 	elasticsearchClient *elastic.Client
+	elasticsearchindex string
 }
 
 type SearchResult struct {
@@ -66,7 +67,7 @@ func (s *Searcher) ArticleGroupSalesStartHistogram(articleGroup string, startDat
 	aggregation := elastic.NewDateHistogramAggregation().Field("SalesStart").Interval("day").MinDocCount(1).Format("yyyy-MM-dd")
 
 	searchResult, err := s.elasticsearchClient.Search().
-		Index("articles").
+		Index(s.elasticsearchindex).
 		Query(query).
 		Aggregation("aggs", aggregation).
 		From(0).Size(0).
@@ -92,7 +93,7 @@ func (s *Searcher) ArticleGroupSalesStartHistogram(articleGroup string, startDat
 func (s *Searcher) search(query elastic.Query, from int, size int) (*elastic.SearchResult, error) {
 
 	searchResult, err := s.elasticsearchClient.Search().
-		Index("articles").
+		Index(s.elasticsearchindex).
 		Query(query).
 		//Sort("Name", true). // sort by "Name" field, ascending
 		From(from).Size(size).
@@ -134,7 +135,7 @@ func parseAggregations(items []*elastic.AggregationBucketHistogramItem) []Aggreg
 	return aggregations
 }
 
-func NewSearcher(serverURL string) *Searcher {
+func NewSearcher(serverURL string, indexName string) *Searcher {
 
 	client, err := retryConnect(15, 5*time.Second, func() (*elastic.Client, error) {
 		return elastic.NewClient(elastic.SetURL(serverURL))
@@ -145,6 +146,7 @@ func NewSearcher(serverURL string) *Searcher {
 
 	return &Searcher{
 		elasticsearchClient: client,
+		elasticsearchindex: indexName,
 	}
 }
 

@@ -10,7 +10,8 @@ services:
         depends_on:
             - elasticsearch
         environment:
-            - ES-URL=http://elasticsearch:9200
+            - ELASTICSEARCH_URL=http://elasticsearch:9200
+            - ELASTICSEARCH_INDEX=articles
 
     indexer:
         image: jonasfred/systembolaget-article-indexer:latest

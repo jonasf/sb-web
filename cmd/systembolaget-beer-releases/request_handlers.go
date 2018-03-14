@@ -59,9 +59,9 @@ func setupTemplates() map[string]*template.Template {
 	return templates
 }
 
-func NewRequestHandler(serverURL string) RequestHandler {
+func NewRequestHandler(serverURL string, indexName string) RequestHandler {
 	return RequestHandler{
-		searcher:  search.NewSearcher(serverURL),
+		searcher:  search.NewSearcher(serverURL, indexName),
 		templates: setupTemplates(),
 	}
 }
