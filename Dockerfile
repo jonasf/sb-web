@@ -1,23 +1,23 @@
 # Build stage
 FROM golang:1.10 AS build-env
-ADD . $GOPATH/src/build
-WORKDIR $GOPATH/src/build
+ADD . $GOPATH/src/github.com/jonasf/sb-web
+WORKDIR $GOPATH/src/github.com/jonasf/sb-web
 
 ## Install dependencies
 RUN go get -u github.com/golang/dep/cmd/dep
 RUN dep ensure -vendor-only
 
-RUN CGO_ENABLED=0 go build -a --installsuffix cgo --ldflags="-s" -o sb-web
+RUN cd cmd/systembolaget-beer-releases && CGO_ENABLED=0 go build -a --installsuffix cgo --ldflags="-s" -o ../../build/systembolaget-beer-releases
 
 # Package stage
 FROM scratch
 
 WORKDIR /app
 # NOTE: hard coded $GOPATH
-COPY --from=build-env /go/src/build/templates /app/templates
-COPY --from=build-env /go/src/build/public /app/public
-COPY --from=build-env /go/src/build/sb-web /app/
+COPY --from=build-env /go/src/github.com/jonasf/sb-web/cmd/systembolaget-beer-releases/templates /app/templates
+COPY --from=build-env /go/src/github.com/jonasf/sb-web/cmd/systembolaget-beer-releases/public /app/public
+COPY --from=build-env /go/src/github.com/jonasf/sb-web/build/systembolaget-beer-releases /app/
 
 EXPOSE 8080
 
-ENTRYPOINT ["./sb-web"]
+ENTRYPOINT ["./systembolaget-beer-releases"]
