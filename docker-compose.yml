@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
     web:
-        image: jonasfred/sb-web
+        image: jonasfred/systembolaget-beer-releases
         ports:
             - 8080:8080
         links:
@@ -10,7 +10,8 @@ services:
         depends_on:
             - elasticsearch
         environment:
-            - ES-URL=http://elasticsearch:9200
+            - ELASTICSEARCH_URL=http://elasticsearch:9200
+            - ELASTICSEARCH_INDEX=articles
         networks:
             - beer_releases
 
@@ -21,7 +22,9 @@ services:
         depends_on:
             - elasticsearch
         environment:
-            - ES-URL=http://elasticsearch:9200
+            - ELASTICSEARCH_URL=http://elasticsearch:9200
+            - ELASTICSEARCH_INDEX=articles
+            - SYSTEMBOLAGET_API_URL=https://www.systembolaget.se/api/assortment/products/xml
         networks:
             - beer_releases
 

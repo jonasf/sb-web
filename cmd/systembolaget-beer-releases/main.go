@@ -1,10 +1,8 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -12,16 +10,12 @@ import (
 
 func main() {
 
-	esURL := os.Getenv("ES-URL")
+	configuration := LoadConfig()
 
-	if esURL == "" {
-		esURLPtr := flag.String("es-url", "http://localhost:9200", "ElasticSearch URL")
-		flag.Parse()
-		esURL = *esURLPtr
-	}
-	log.Println("Elasticsearch server address: ", esURL)
+	log.Println("Using Elasticsearch Server:", configuration.ElasticsearchURL)
+	log.Println("Using Elasticsearch Index Name:", configuration.ElasticsearchIndex)
 
-	requestHandler := NewRequestHandler(esURL)
+	requestHandler := NewRequestHandler(configuration.ElasticsearchURL, configuration.ElasticsearchIndex)
 
 	r := mux.NewRouter()
 	r.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("public/"))))
