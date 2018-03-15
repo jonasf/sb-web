@@ -1,12 +1,13 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
-	search "github.com/jonasf/sb-web/internal/systembolaget-beer-releases"
 	"html/template"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/gorilla/mux"
+	search "github.com/jonasf/systembolaget-beer-releases/internal/systembolaget-beer-releases"
 )
 
 type Search interface {

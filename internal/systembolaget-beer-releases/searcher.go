@@ -12,7 +12,7 @@ import (
 
 type Searcher struct {
 	elasticsearchClient *elastic.Client
-	elasticsearchindex string
+	elasticsearchindex  string
 }
 
 type SearchResult struct {
@@ -146,7 +146,7 @@ func NewSearcher(serverURL string, indexName string) *Searcher {
 
 	return &Searcher{
 		elasticsearchClient: client,
-		elasticsearchindex: indexName,
+		elasticsearchindex:  indexName,
 	}
 }
 

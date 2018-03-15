@@ -2,12 +2,13 @@ package main
 
 import (
 	"errors"
-	"github.com/gorilla/mux"
-	search "github.com/jonasf/sb-web/internal/systembolaget-beer-releases"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
+
+	"github.com/gorilla/mux"
+	search "github.com/jonasf/systembolaget-beer-releases/internal/systembolaget-beer-releases"
 )
 
 type SearchStub struct{}

@@ -6,10 +6,9 @@ import (
 )
 
 type Configuration struct {
-	ElasticsearchURL    string
-	ElasticsearchIndex  string
+	ElasticsearchURL   string
+	ElasticsearchIndex string
 }
-
 
 func LoadConfig() Configuration {
 	elasticsearchURL := flag.String("es-url", "http://localhost:9200", "ElasticSearch URL")
@@ -17,8 +16,8 @@ func LoadConfig() Configuration {
 	flag.Parse()
 
 	configuration := Configuration{
-		ElasticsearchURL:    os.Getenv("ELASTICSEARCH_URL"),
-		ElasticsearchIndex:  os.Getenv("ELASTICSEARCH_INDEX"),
+		ElasticsearchURL:   os.Getenv("ELASTICSEARCH_URL"),
+		ElasticsearchIndex: os.Getenv("ELASTICSEARCH_INDEX"),
 	}
 
 	if configuration.ElasticsearchURL == "" {
