@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose-dev.yml
+    kompose.version: 1.10.0 (8bb0907)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: kibana
+  name: kibana
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: kibana
+    spec:
+      containers:
+      - env:
+        - name: xpack.monitoring.enabled
+          value: "false"
+        - name: xpack.security.enabled
+          value: "false"
+        image: docker.elastic.co/kibana/kibana:5.6.0
+        name: kibana
+        ports:
+        - containerPort: 5601
+        resources: {}
+      restartPolicy: Always
+status: {}
