@@ -1,0 +1,21 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: indexer-cronjob
+spec:
+  schedule: "*/30 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: indexer-cronjob
+            image: jonasfred/systembolaget-article-indexer:latest
+            env:
+              - name: ELASTICSEARCH_INDEX
+                value: articles
+              - name: ELASTICSEARCH_URL
+                value: http://elasticsearch:9200
+              - name: SYSTEMBOLAGET_API_URL
+                value: https://www.systembolaget.se/api/assortment/products/xml
+          restartPolicy: OnFailure
