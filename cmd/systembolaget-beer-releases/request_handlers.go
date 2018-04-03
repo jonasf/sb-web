@@ -21,6 +21,11 @@ type RequestHandler struct {
 	templates map[string]*template.Template
 }
 
+type SalesStartDatePageData struct {
+	Articles       []search.Article
+	SalesStartDate string
+}
+
 func (s *RequestHandler) HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 	fromDate := time.Now().AddDate(0, 0, -2)
@@ -45,7 +50,7 @@ func (s *RequestHandler) SalesStartDateHandler(w http.ResponseWriter, r *http.Re
 	if err != nil {
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	} else if err := s.templates["salesstartdate"].Execute(w, struct{ Articles []search.Article }{result.Articles}); err != nil {
+	} else if err := s.templates["salesstartdate"].Execute(w, SalesStartDatePageData{Articles: result.Articles, SalesStartDate: releaseDate.Format("2006-01-02")}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
