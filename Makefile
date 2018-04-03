@@ -1,4 +1,4 @@
-VERSION ?= 0.1.1
+VERSION ?= 0.1.2
 
 BUILD_DIR ?= ./out
 APPS := systembolaget-beer-releases
