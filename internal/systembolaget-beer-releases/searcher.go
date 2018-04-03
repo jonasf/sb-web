@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
+	elastic "github.com/olivere/elastic"
 	"golang.org/x/net/context"
-	elastic "gopkg.in/olivere/elastic.v5"
 )
 
 type Searcher struct {

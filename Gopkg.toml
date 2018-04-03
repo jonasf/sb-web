@@ -33,10 +33,6 @@
   branch = "master"
   name = "golang.org/x/net"
 
-[[constraint]]
-  name = "gopkg.in/olivere/elastic.v5"
-  version = "5.0.65"
-
 [prune]
   go-tests = true
   unused-packages = true
