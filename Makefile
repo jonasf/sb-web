@@ -3,7 +3,7 @@ VERSION ?= 0.1.0
 BUILD_DIR ?= ./out
 APPS := systembolaget-beer-releases
 
-all: clean vet fmt deps test build
+all: clean deps vet fmt test build
 
 ci: vet deps cover
 
